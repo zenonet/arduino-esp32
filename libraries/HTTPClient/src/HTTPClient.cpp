@@ -473,7 +473,8 @@ void HTTPClient::setConnectTimeout(int32_t connectTimeout) {
 }
 
 /**
- * set the timeout for the TCP connection
+ * set the timeout (ms) for the TCP connection.
+ * Setting the timeout to 0 disables response timeout completely.
  * @param timeout unsigned int
  */
 void HTTPClient::setTimeout(uint16_t timeout) {
@@ -1282,7 +1283,7 @@ int HTTPClient::handleHeaderResponse() {
       }
 
     } else {
-      if ((millis() - lastDataTime) > _tcpTimeout) {
+      if (_tcpTimeout > 0 && (millis() - lastDataTime) > _tcpTimeout) {
         return HTTPC_ERROR_READ_TIMEOUT;
       }
       delay(10);
